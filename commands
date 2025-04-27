@@ -1,0 +1,11 @@
+docker
+docker ps
+docker ps -a
+docker stop <imagename>
+docker build -t <imagename> <imagedockerfileder>
+docker run -p 8888:8888 <imagename>
+docker image history <imagename>
+docker login --username <login>
+docker image tag helloworld <login>/<imagename>
+docker rm <containerID>
+docker image push <login>/<imagename>

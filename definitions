@@ -1,0 +1,15 @@
+Docker: helps you in deploying your applications more efficiently in a sandbox (called containers) to run on the host operating system i.e. Mac. The main advantage of docker is that it allows you to package software with all of its dependencies into a single standardized unit.
+----------------------------------------------------------------------------------------------------------------------------------------
+container: is a solution for how to get the software to run without any problems when moved from one computing environment to another. This could be from a staging environment into production or maybe from a laptop to a different laptop with another operating system.
+Containers provide a logical packaging mechanism in which your applications can be abstracted from the environment in which they run. The major difference is that every container does not require its full-fledged OS. All containers on a single host sharing a single OS. This helps in frees up huge amounts of system resources such as CPU, RAM.
+----------------------------------------------------------------------------------------------------------------------------------------
+Dockerfile: is a text document that contains all the commands you could call on the command line to make an image.
+----------------------------------------------------------------------------------------------------------------------------------------
+Docker image: are like virtual machine templates and are used to start containers. Under the hood, they are made up of one or more read-only layers, that when stacked together, make up the overall image. Docker takes care of stacking these layers and representing them as a single unified object. Note: Docker Images are immutable means Docker images can’t ever change. Once you’ve made one, you can delete it, but you can’t modify it.
+The Docker image contains all the files you packaged, which become the container’s filesystem - and it also contains a lot of metadata about the image itself. That includes a brief history of how the image was built. You can use that to see each layer of the image, and the command that built the layer.
+----------------------------------------------------------------------------------------------------------------------------------------
+Distributed applications typically involve multiple components or services that interact with each other over a network.
+----------------------------------------------------------------------------------------------------------------------------------------
+Image tags: are important for tracking versions.
+Follow the system: major.minor.patch to give meaning to your tags.
+This helps you and other developers understand what kind of changes they should expect.
