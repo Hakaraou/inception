@@ -1,15 +1,17 @@
-all: up
+# Makefile for testing Docker Compose and building services
 
+# Build and start the containers
 up:
-	docker compose -f docker-compose.yml up --build -d
+	docker-compose -f srcs/docker-compose.yml up --build
 
+# Stop the containers
 down:
-	docker compose -f docker-compose.yml down
+	docker-compose down
 
-clean: down
-	sudo rm -rf /home/hakaraou/data/*
+# Clean unused Docker images and volumes
+clean:
+	docker system prune -f
 
-fclean: clean
-	docker system prune -a
-
-re: fclean up
+# Check logs
+logs:
+	docker-compose logs mariadb
