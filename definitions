@@ -5,7 +5,8 @@ Containers provide a logical packaging mechanism in which your applications can 
 ----------------------------------------------------------------------------------------------------------------------------------------
 Dockerfile: is a text document that contains all the commands you could call on the command line to make an image.
 ----------------------------------------------------------------------------------------------------------------------------------------
-Docker image: are like virtual machine templates and are used to start containers. Under the hood, they are made up of one or more read-only layers, that when stacked together, make up the overall image. Docker takes care of stacking these layers and representing them as a single unified object. Note: Docker Images are immutable means Docker images can’t ever change. Once you’ve made one, you can delete it, but you can’t modify it.
+Docker image: are like virtual machine templates and are used to start containers. Under the hood, they are made up of one or more read-only layers, that when stacked together, make up the overall image. Docker takes care of stacking these layers and representing them as a single unified object.
+Note: Docker Images are immutable means Docker images can’t ever change. Once you’ve made one, you can delete it, but you can’t modify it.
 The Docker image contains all the files you packaged, which become the container’s filesystem - and it also contains a lot of metadata about the image itself. That includes a brief history of how the image was built. You can use that to see each layer of the image, and the command that built the layer.
 ----------------------------------------------------------------------------------------------------------------------------------------
 Distributed applications typically involve multiple components or services that interact with each other over a network.
@@ -13,3 +14,15 @@ Distributed applications typically involve multiple components or services that 
 Image tags: are important for tracking versions.
 Follow the system: major.minor.patch to give meaning to your tags.
 This helps you and other developers understand what kind of changes they should expect.
+----------------------------------------------------------------------------------------------------------------------------------------
+docker-compose: is a tool for defining and running multi-container Docker applications. It allows you to define a multi-container application in a single file, then spin up the application with a single command. It is used to manage the entire lifecycle of your application, including building images, starting containers, and managing networks.
+docker-compose.yml is the Docker Compose file that describes how Docker should deploy the app.
+
+
+
+-------questions:--------------------------------------------------------------------------------------------------------
+|																														|
+|	chno l 7aja li kitchark fiha l host m3a l containers wach l os wla lkernel?											|
+|	l image rah read only so 7na maymknch nbdlo fiha , but wach docker file y9ed matalan ybdel chi layer wla ydeletih?	|
+|																														|
+-------------------------------------------------------------------------------------------------------------------------
