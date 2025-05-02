@@ -73,15 +73,84 @@ Docker Daemon: The background service running on the host that manages building,
 Docker Client: The command line tool that allows the user to interact with the daemon. More generally, there can be other forms of clients too - such as Kitematic which provide a GUI to the users.
 ----------------------------------------------------------------------------------------------------------------------------------------
 deps.yml: This file defines all of the services that our app depends on, excluding the app itself (our code). The advantage of defining this separately is that it allows us to handle the run dependencies use case without duplication of services: we can run all dependencies in Docker and our app directly on the host machine. The docker-compose.yml file extends the services in deps.yml to complete the abstract service definitions.
+
+services:
+ dependency1:
+   ... <full working definition>
+ 
+ dependency2:
+   ... <full working defintion>
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 docker-compose.yml: The standard file that Docker looks for when you run up. We define all services in an abstract way here, such that other files will complete the service definitions depending on use case.
+
+services:
+  dependency1:
+    extends:
+      file: docker-compose.deps.yml
+      service: dependency1
+
+  dependency2:
+    extends:
+      file: docker-compose.deps.yml
+      service: dependency2
+
+  myappservice:
+   ... <abstract definition with NO image and NO build>
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 docker-compose.override.yml: This file is automatically used by Docker Compose to override the settings in docker-compose.yml. It is a good place to define local development settings, such as mounting your code into the container.
 If you run docker compose up, that is without the -f argument, then Docker will automatically merge docker-compose.override.yml with docker-compose.yml. This is the quick start demo case, so the override file completes the abstract definition of our apps service by indicating a versioned image is to be used. Note: this means we can commit changes to the main git branch while we develop and not worry about breaking our demo.
+
+services:
+  myappservice:
+    image: myimage:<with-specific-version>
+    ... <demo-specific definition>
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 build.yml: This file defines the build process for our app. It is used to build the image that we will run in our app service. The build process is defined in a separate file so that we can use the same image in different environments (e.g. dev, test, prod) without duplicating the build process.
 This file provides an alternative service definition for our app service that leverages docker build instead of using a tagged image.
+
+services:
+  dependency1:
+    extends:
+      file: docker-compose.yml
+      service: dependency1
+
+  dependency2:
+    extends:
+      file: docker-compose.yml
+      service: dependency2
+
+  myappservice:
+    extends:
+      file: docker-compose.yml
+      service: myappservice
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:   
+    ... <build-specific definition>
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 bind.yml: This file defines the bind mount for our app service. It is used to mount our code into the container so that we can develop and test our code without having to rebuild the image every time we make a change. The bind mount is defined in a separate file so that we can use the same mount in different environments (e.g. dev, test, prod) without duplicating the mount process.
 This file provides an alternative service definition for our app service that bind mounts deployment artifacts and other resources that we would like to modify during development to enable a quick modify and verify result loop. Extends build.yml. Provides repeatable runtime environment (but not repeatable build environment). However, in practice this bind mount approach often is a giant struggle to get to work with all project scenarios. See Bind Mount Issues
+
+services:
+  dependency1:
+    extends:
+      file: build.yml
+      service: dependency1
+
+  dependency2:
+    extends:
+      file: build.yml
+      service: dependency2
+
+  myappservice:
+    extends:
+      file: build.yml
+      service: myappservice
+    ... <bind-specific definition; includes bind volumes>
+
 ----------------------------------------------------------------------------------------------------------------------------------------
