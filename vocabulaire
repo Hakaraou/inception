@@ -21,30 +21,27 @@ docker client	<-------|---> docker deamon		|
 						|		  runc			|
 						|_______________________|
 
-docker engine
 docker client: Ex. docker command(CLI)
+docker engine:
 docker deamon: API and other features
 container d: container supervisor start|stop|pause,,
 shim: enables daemonless containers
 runc: conatiner runtime
 
+image name = repo + tag
 container image
 layer
 build time
 build time commands
 run time
 run time commands
-
 registry
 repo
 tags
-image name = repo + tag
-
 manifest liste
 manifest
 
 container
-
 PID1
 virtual machine
 hypervisor
@@ -56,3 +53,40 @@ namespaces
 docker
 port
 docker API
+
+container = sandbox: an isolated network stack, it includes: ethernet intrfaces, ports, routing tables and DNS config.
+endpoint: virtual network interfaces responsible for making sandboxes connect to networks.
+network: software implementation of an switch. (virtual switch)
+libnetwork: implements the control plane and management plane functions and drivers implement the data plane.
+linux drivers: 
+	- bridge driver (single host)
+	- MACVLAN driver (existing VLANs, single host)
+	- overlay driver (multi-host)
+windows drivers: nat. overlay. transport and l2bridge
+CNM
+host
+bridge
+none
+
+exec mode / exec way
+shell mode / exec shell
+.dockerignore
+run time
+build time
+intermidiate container
+why ENV: after deleting intermidiate container shell exit and all variables in env was deleted
+CMD / ENTERPOINT(meta data of image)
+RUN(build image)
+meta data (inspect)
+
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["./src/start-hadoop.sh"]
+ENTRYPOINT runs /bin/bash -c, which expects a string command as its argument.
+CMD provides that string ("./src/start-hadoop.sh").
+/bin/bash becomes PID 1, not the script.
+./src/start-hadoop.sh is a child process of bash
+
+[application] -> [services] -> [microservices == containers]
+monolothique application (all code non separe)
+service = container(code) + storage + network
+service not for sure he can be container, he can be many containers.

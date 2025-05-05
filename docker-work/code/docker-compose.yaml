@@ -1,0 +1,32 @@
+version: "3.5"
+
+services:
+  web-fe:
+    #docker build -t counter-app .
+    build: .
+    command: python app.py
+    #best than ports: 5000:5000
+    ports:
+      - target: 5000
+        published: 5000
+    networks:
+      - counter-net
+    volumes:
+      - type: volume
+        source: counter-vol
+        target: /code
+
+  #docker pull redis:alpine + docker container run --name redis -p counter-net redis:alpine
+  redis:
+    image: "redis:alpine"
+    networks:
+      counter-net:
+
+networks:
+  #docker network create counter-net
+  counter-net:
+
+valumes:
+  #docker volume create counter-vol
+  counter-vol:
+    
