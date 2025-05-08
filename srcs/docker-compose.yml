@@ -1,0 +1,21 @@
+version: "3.5"
+
+services:
+  mariadb:
+    build: ./requirements/MariaDB
+    env_file:
+      - .env
+    command: /db-app/tools/db-set.sh
+    ports:
+      - target: 5000
+        published: 5000
+    networks:
+      - wp-net
+    restart: always
+
+networks:
+  wp-net:
+
+volumes:
+  wp-database-vol:
+  wp-websitef-vol:

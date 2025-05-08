@@ -1,0 +1,7 @@
+mn l a7sen fach nji ndir from flmake file mandirch latest ndir l version bdebt
+
+chofi hado mnin jaw
+    1 root      0:00 python app.py
+   12 root      0:02 /usr/local/bin/python /code/app.py
+
+jerbi t7ydi network

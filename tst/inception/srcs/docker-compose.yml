@@ -1,0 +1,20 @@
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    image: mariadb:user
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MDB_ROOT_PASSWORD}
+    volumes:
+      - mariadb:/var/lib/mysql #??????????
+    networks:
+      - inception
+    restart: always
+
+volumes:
+  mariadb:
+
+networks:
+  inception:

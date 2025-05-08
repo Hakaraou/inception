@@ -1,0 +1,156 @@
+Docker: helps you in deploying your applications more efficiently in a sandbox (called containers) to run on the host operating system i.e. Mac. The main advantage of docker is that it allows you to package software with all of its dependencies into a single standardized unit.
+----------------------------------------------------------------------------------------------------------------------------------------
+container: is a solution for how to get the software to run without any problems when moved from one computing environment to another. This could be from a staging environment into production or maybe from a laptop to a different laptop with another operating system.
+Containers provide a logical packaging mechanism in which your applications can be abstracted from the environment in which they run. The major difference is that every container does not require its full-fledged OS. All containers on a single host sharing a single OS. This helps in frees up huge amounts of system resources such as CPU, RAM.
+Containers - Created from Docker images and run the actual application.
+----------------------------------------------------------------------------------------------------------------------------------------
+Dockerfile: is a text document that contains all the commands you could call on the command line to make an image.
+----------------------------------------------------------------------------------------------------------------------------------------
+Docker image: are like virtual machine templates and are used to start containers. Under the hood, they are made up of one or more read-only layers, that when stacked together, make up the overall image. Docker takes care of stacking these layers and representing them as a single unified object.
+Note: Docker Images are immutable means Docker images can’t ever change. Once you’ve made one, you can delete it, but you can’t modify it.
+The Docker image contains all the files you packaged, which become the container’s filesystem - and it also contains a lot of metadata about the image itself. That includes a brief history of how the image was built. You can use that to see each layer of the image, and the command that built the layer.
+Images - The blueprints of our application which form the basis of containers.
+Base images are images that have no parent image, usually images with an OS like ubuntu, busybox or debian.
+Child images are images that build on base images and add additional functionality.
+----------------------------------------------------------------------------------------------------------------------------------------
+Distributed applications typically involve multiple components or services that interact with each other over a network.
+----------------------------------------------------------------------------------------------------------------------------------------
+Image tags: are important for tracking versions.
+Follow the system: major.minor.patch to give meaning to your tags.
+This helps you and other developers understand what kind of changes they should expect.
+----------------------------------------------------------------------------------------------------------------------------------------
+docker-compose: is a tool for defining and running multi-container Docker applications. It allows you to define a multi-container application in a single file, then spin up the application with a single command. It is used to manage the entire lifecycle of your application, including building images, starting containers, and managing networks.
+docker-compose.yml is the Docker Compose file that describes how Docker should deploy the app.
+----------------------------------------------------------------------------------------------------------------------------------------
+🧠 The real hierarchy of control (simplified):
+1. Linux Kernel (🧬 the foundation)
+The kernel provides core features like namespaces, cgroups, file systems, and networking — which make containers possible.
+
+It does not "manage" Docker, but Docker relies on it to isolate and run containers.
+
+2. Docker Engine (🛠 the full container platform)
+It's the software that manages containers.
+
+Composed of:
+
+dockerd (Docker daemon)
+
+containerd (container runtime manager)
+
+runc (low-level runtime)
+
+3. dockerd (👷 the manager)
+This is the Docker daemon.
+
+Listens to the Docker CLI or API requests and coordinates everything.
+
+It talks to containerd.
+
+4. containerd (🏗 container supervisor)
+A daemon responsible for managing container lifecycles (create, start, stop, delete).
+
+Delegates actual container creation to runc.
+
+5. runc (⚙ low-level executor)
+A CLI tool that actually creates the container based on OCI specs.
+
+It calls clone() and other kernel syscalls to create a container process with namespaces and cgroups.
+----------------------------------------------------------------------------------------------------------------------------------------
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+----------------------------------------------------------------------------------------------------------------------------------------
+Docker Hub: is one example of a Docker registry.
+Docker Hub - A registry of Docker images. You can think of the registry as a directory of all available Docker images. If required, one can host their own Docker registries and can use them for pulling images.
+----------------------------------------------------------------------------------------------------------------------------------------
+Docker Daemon: The background service running on the host that manages building, running and distributing Docker containers. The daemon is the process that runs in the operating system which clients talk to.
+----------------------------------------------------------------------------------------------------------------------------------------
+Docker Client: The command line tool that allows the user to interact with the daemon. More generally, there can be other forms of clients too - such as Kitematic which provide a GUI to the users.
+----------------------------------------------------------------------------------------------------------------------------------------
+deps.yml: This file defines all of the services that our app depends on, excluding the app itself (our code). The advantage of defining this separately is that it allows us to handle the run dependencies use case without duplication of services: we can run all dependencies in Docker and our app directly on the host machine. The docker-compose.yml file extends the services in deps.yml to complete the abstract service definitions.
+
+services:
+ dependency1:
+   ... <full working definition>
+ 
+ dependency2:
+   ... <full working defintion>
+
+----------------------------------------------------------------------------------------------------------------------------------------
+docker-compose.yml: The standard file that Docker looks for when you run up. We define all services in an abstract way here, such that other files will complete the service definitions depending on use case.
+
+services:
+  dependency1:
+    extends:
+      file: docker-compose.deps.yml
+      service: dependency1
+
+  dependency2:
+    extends:
+      file: docker-compose.deps.yml
+      service: dependency2
+
+  myappservice:
+   ... <abstract definition with NO image and NO build>
+
+----------------------------------------------------------------------------------------------------------------------------------------
+docker-compose.override.yml: This file is automatically used by Docker Compose to override the settings in docker-compose.yml. It is a good place to define local development settings, such as mounting your code into the container.
+If you run docker compose up, that is without the -f argument, then Docker will automatically merge docker-compose.override.yml with docker-compose.yml. This is the quick start demo case, so the override file completes the abstract definition of our apps service by indicating a versioned image is to be used. Note: this means we can commit changes to the main git branch while we develop and not worry about breaking our demo.
+
+services:
+  myappservice:
+    image: myimage:<with-specific-version>
+    ... <demo-specific definition>
+
+----------------------------------------------------------------------------------------------------------------------------------------
+build.yml: This file defines the build process for our app. It is used to build the image that we will run in our app service. The build process is defined in a separate file so that we can use the same image in different environments (e.g. dev, test, prod) without duplicating the build process.
+This file provides an alternative service definition for our app service that leverages docker build instead of using a tagged image.
+
+services:
+  dependency1:
+    extends:
+      file: docker-compose.yml
+      service: dependency1
+
+  dependency2:
+    extends:
+      file: docker-compose.yml
+      service: dependency2
+
+  myappservice:
+    extends:
+      file: docker-compose.yml
+      service: myappservice
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:   
+    ... <build-specific definition>
+
+----------------------------------------------------------------------------------------------------------------------------------------
+bind.yml: This file defines the bind mount for our app service. It is used to mount our code into the container so that we can develop and test our code without having to rebuild the image every time we make a change. The bind mount is defined in a separate file so that we can use the same mount in different environments (e.g. dev, test, prod) without duplicating the mount process.
+This file provides an alternative service definition for our app service that bind mounts deployment artifacts and other resources that we would like to modify during development to enable a quick modify and verify result loop. Extends build.yml. Provides repeatable runtime environment (but not repeatable build environment). However, in practice this bind mount approach often is a giant struggle to get to work with all project scenarios. See Bind Mount Issues
+
+services:
+  dependency1:
+    extends:
+      file: build.yml
+      service: dependency1
+
+  dependency2:
+    extends:
+      file: build.yml
+      service: dependency2
+
+  myappservice:
+    extends:
+      file: build.yml
+      service: myappservice
+    ... <bind-specific definition; includes bind volumes>
+
+----------------------------------------------------------------------------------------------------------------------------------------
