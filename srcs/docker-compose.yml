@@ -7,10 +7,28 @@ services:
       - .env
     command: /db-app/tools/db-set.sh
     ports:
-      - target: 5000
-        published: 5000
+      - target: 3306
+        published: 3306
     networks:
       - wp-net
+    volumes:
+      wp-database-vol:
+    restart: always
+
+  wordpress:
+    build: ./requirements/WordPress
+    env_file:
+      - .env
+    command: php /wp-app/tools/wp-set.php
+    ports:
+      - target: 9000
+        published: 9000
+      - target: 3306
+        published: 3306
+    networks:
+      - wp-net
+    volumes:
+      wp-websitef-vol:
     restart: always
 
 networks:
