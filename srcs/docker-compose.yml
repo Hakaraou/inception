@@ -12,23 +12,21 @@ services:
     networks:
       - wp-net
     volumes:
-      wp-database-vol:
+      - wp-database-vol:/var/lib/mysql
     restart: always
 
   wordpress:
     build: ./requirements/WordPress
     env_file:
       - .env
-    command: php /wp-app/tools/wp-set.php
+    command: /usr/wp-set.sh
     ports:
       - target: 9000
         published: 9000
-      - target: 3306
-        published: 3306
     networks:
       - wp-net
     volumes:
-      wp-websitef-vol:
+      - wp-websitef-vol:/var/www/html
     restart: always
 
 networks:
