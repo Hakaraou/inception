@@ -1,0 +1,102 @@
+RUN apk update && apk add --no-cache \
+    nginx \
+    openssl \
+
+# --no-cache
+
+
+
+
+
+# Nginx Settings
+export NGINX_CONF=./nginx/default.conf
+export NGINX_SSL_CERTS=./ssl
+export NGINX_LOGS=./logs/nginx
+
+
+# default.conf
+# redirect to HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name $host;
+    location / {
+        # update port as needed for host mapped https
+        rewrite ^ https://$host:8443$request_uri? permanent;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name $host;
+    index index.php index.html index.htm;
+    root /var/www/html;
+    server_tokens off;
+    client_max_body_size 75M;
+
+    # update ssl files as required by your deployment
+    ssl_certificate /etc/ssl/fullchain.pem;
+    ssl_certificate_key /etc/ssl/privkey.pem;
+
+    # logging
+    access_log /var/log/nginx/wordpress.access.log;
+    error_log /var/log/nginx/wordpress.error.log;
+
+    # some security headers ( optional )
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline'" always;
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    location ~ \.php$ {
+        try_files $uri = 404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass wordpress:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    location = /favicon.ico {
+        log_not_found off; access_log off;
+    }
+
+    location = /favicon.svg {
+        log_not_found off; access_log off;
+    }
+
+    location = /robots.txt {
+        log_not_found off; access_log off; allow all;
+    }
+
+    location ~* \.(css|gif|ico|jpeg|jpg|js|png)$ {
+        expires max;
+        log_not_found off;
+    }
+}
+
+
+
+
+Attaching to srcs-mariadb-1, srcs-nginx-1, srcs-wordpress-1
+srcs-wordpress-1  | Downloading WordPress 6.8.1 (en_US)...
+srcs-mariadb-1    | Starting MariaDB database server: mariadbd.
+srcs-wordpress-1  | md5 hash verified: 1bfd868dd21ff736e94307f2c9828c7a
+srcs-wordpress-1  | Success: WordPress downloaded.
+srcs-mariadb-1    | 250511 18:17:57 mysqld_safe Logging to syslog.
+srcs-mariadb-1    | 250511 18:17:57 mysqld_safe Starting mariadbd daemon with databases from /var/lib/mysql
+srcs-wordpress-1  | Success: Generated 'wp-config.php' file.
+srcs-wordpress-1  | sh: 1: /usr/sbin/sendmail: not found
+srcs-wordpress-1  | Success: WordPress installed successfully.
+srcs-wordpress-1  | Success: Created user 2.
