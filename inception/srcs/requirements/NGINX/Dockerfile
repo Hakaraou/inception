@@ -1,6 +1,6 @@
 FROM debian:bullseye
 
-WORKDIR /app
+# WORKDIR /app
 
 RUN	apt-get update && apt-get upgrade -y && \
 	apt-get install -y nginx openssl && \
@@ -13,7 +13,7 @@ RUN openssl req -x509 -nodes -newkey rsa:2048 \
 		-days 365 \
 		-subj "/C=MA/ST=Khouribga/L=City/O=42/OU=42/CN=hakaraou.42.fr/UID=admin_name"
 
-COPY ./conf/nginx.conf /etc/nginx/conf.d/nginx.conf
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 443
 

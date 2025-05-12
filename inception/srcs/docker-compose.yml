@@ -4,7 +4,7 @@ services:
   mariadb:
     build: ./requirements/MariaDB
     #ask
-    image: mariadb
+    image: mariadb:hakaraou
     env_file:
       - .env
     command: /db-app/tools/db-set.sh
@@ -19,7 +19,7 @@ services:
 
   wordpress:
     build: ./requirements/WordPress
-    image: wordpress
+    image: wordpress:hakaraou
     env_file:
       - .env
     command: /usr/wp-set.sh
@@ -34,7 +34,7 @@ services:
 
   nginx:
     build: ./requirements/NGINX
-    image: nginx
+    image: nginx:hakaraou
     env_file:
       - .env
     command: [ "/usr/sbin/nginx", "-g", "daemon off;" ]
