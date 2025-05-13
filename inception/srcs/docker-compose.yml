@@ -3,7 +3,6 @@ version: "3.5"
 services:
   mariadb:
     build: ./requirements/MariaDB
-    #ask
     image: mariadb:hakaraou
     env_file:
       - .env
