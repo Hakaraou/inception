@@ -1,0 +1,76 @@
+version: "3.5"
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  db_user_password:
+    file: ../secrets/db_user_password.txt
+  # wp_admin_password:
+  #   file: ../secrets/wp_admin_password.txt
+
+services:
+  mariadb:
+    build: ./requirements/MariaDB
+    image: mariadb:hakaraou
+    env_file:
+      - .env
+    secrets:
+      - db_root_password
+      - db_user_password
+    command: /db-app/tools/db-set.sh
+    ports:
+      - target: 3306
+        published: 3306
+    networks:
+      - wp-net
+    # volumes:
+    #   - wp-database-vol:/var/lib/mysql
+    restart: always
+
+  # wordpress:
+  #   build: ./requirements/WordPress
+  #   image: wordpress:hakaraou
+  #   env_file:
+  #     - .env
+  #   command: /usr/wp-set.sh
+  #   ports:
+  #     - target: 9000
+  #       published: 9000
+  #   networks:
+  #     - wp-net
+  #   volumes:
+  #     - wp-websitef-vol:/var/www/html
+  #   restart: always
+
+  # nginx:
+  #   build: ./requirements/NGINX
+  #   image: nginx:hakaraou
+  #   env_file:
+  #     - .env
+  #   command: [ "/usr/sbin/nginx", "-g", "daemon off;" ]
+  #   ports:
+  #     - target: 443
+  #       published: 443
+  #   networks:
+  #     - wp-net
+  #   volumes:
+  #     - wp-websitef-vol:/var/www/html
+  #   restart: always
+
+networks:
+  wp-net:
+
+# volumes:
+#   wp-database-vol:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: /home/hakaraou/data/wordpress_db
+
+  # wp-websitef-vol:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     o: bind
+  #     device: /home/hakaraou/data/wordpress_wp

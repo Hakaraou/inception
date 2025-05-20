@@ -1,46 +1,55 @@
-version: "3.5"
+# version: "3.5"
 
 secrets:
   db_root_password:
     file: ../secrets/db_root_password.txt
   db_user_password:
     file: ../secrets/db_user_password.txt
-  # wp_admin_password:
-  #   file: ../secrets/wp_admin_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  wp_user_password:
+    file: ../secrets/wp_user_password.txt
 
 services:
   mariadb:
     build: ./requirements/MariaDB
     image: mariadb:hakaraou
+    container_name: mariadb
     env_file:
       - .env
     secrets:
       - db_root_password
       - db_user_password
-    command: /db-app/tools/db-set.sh
-    ports:
-      - target: 3306
-        published: 3306
     networks:
       - wp-net
     volumes:
       - wp-database-vol:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: always
 
-  # wordpress:
-  #   build: ./requirements/WordPress
-  #   image: wordpress:hakaraou
-  #   env_file:
-  #     - .env
-  #   command: /usr/wp-set.sh
-  #   ports:
-  #     - target: 9000
-  #       published: 9000
-  #   networks:
-  #     - wp-net
-  #   volumes:
-  #     - wp-websitef-vol:/var/www/html
-  #   restart: always
+  wordpress:
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    build: ./requirements/WordPress
+    image: wordpress:hakaraou
+    container_name: wordpress
+    env_file:
+      - .env
+    secrets:
+      - wp_admin_password
+      - db_user_password
+      - wp_user_password
+    command: /usr/wp-set.sh
+    networks:
+      - wp-net
+    volumes:
+      - wp-websitef-vol:/var/www/html
+    restart: always
 
   # nginx:
   #   build: ./requirements/NGINX
@@ -57,6 +66,7 @@ services:
   #     - wp-websitef-vol:/var/www/html
   #   restart: always
 
+#?
 networks:
   wp-net:
 
@@ -68,9 +78,9 @@ volumes:
       o: bind
       device: /home/hakaraou/data/wordpress_db
 
-  # wp-websitef-vol:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     o: bind
-  #     device: /home/hakaraou/data/wordpress_wp
+  wp-websitef-vol:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/hakaraou/data/wordpress_wp

@@ -1,6 +1,8 @@
 FROM	debian:bullseye
 
-RUN		apt-get update && \
+WORKDIR /db-app
+
+RUN		apt-get update && apt-get upgrade -y && \
 		apt-get install mariadb-server -y && \
 		apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -13,4 +15,6 @@ COPY	./tools ./tools
 
 RUN		chmod +x ./tools/db-set.sh
 
-ENTRYPOINT	[ "./tools/db-set.sh" ]
+EXPOSE 3306
+
+ENTRYPOINT	[ "/db-app/tools/db-set.sh" ]

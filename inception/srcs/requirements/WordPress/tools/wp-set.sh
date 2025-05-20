@@ -1,24 +1,37 @@
 #!/bin/bash
 
-set -e
+set -x
+
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+mv wp-cli.phar /usr/local/bin/wp
+
+sed -i "s|listen = /run/php/php7.4-fpm.sock|listen = 9000|g" /etc/php/7.4/fpm/pool.d/www.conf
+
+mkdir -p /run/php
+
+cd /var/www/html
 
 wp core download --allow-root
 
 sleep 5
 
+MARIADB_PASSWORD=$(cat /run/secrets/db_user_password)
+WP_ADMIN_PASS=$(cat /run/secrets/wp_admin_password)
+WP_USER_PASS=$(cat /run/secrets/wp_user_password)
+
 wp config create \
-	--dbname=$WP_DB_NAME \
-	--dbuser=$WP_DB_USER \
-	--dbpass=$WP_DB_PASSWORD \
-	--dbhost=$WP_DB_HOST:3306 \
+	--dbname=$MARIADB_DATABASE \
+	--dbuser=$MARIADB_USER \
+	--dbpass=$MARIADB_PASSWORD \
+	--dbhost=$MARIADB_HOST:3306 \
 	--allow-root
 
-mkdir -p /run/php
 chown -R www-data:www-data /var/www/html
-chmod 777 wp-config.php
+chmod 640 wp-config.php
 
 wp core install \
-	--url="$WP_SITE_URL" \
+	--url="$DOMAIN_NAME" \
 	--title="$WP_TITLE" \
 	--admin_user="$WP_ADMIN_USER" \
 	--admin_password="$WP_ADMIN_PASS" \
