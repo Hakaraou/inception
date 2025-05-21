@@ -1,4 +1,4 @@
-# version: "3.5"
+version: "3.5"
 
 secrets:
   db_root_password:
@@ -44,29 +44,36 @@ services:
       - wp_admin_password
       - db_user_password
       - wp_user_password
-    command: /usr/wp-set.sh
+    networks:
+      - wp-net
+    volumes:
+      - wp-websitef-vol:/var/www/html
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  nginx:
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    build: ./requirements/NGINX
+    image: nginx:hakaraou
+    container_name: nginx
+    env_file:
+      - .env
+    command: [ "/usr/sbin/nginx", "-g", "daemon off;" ]
+    ports:
+      - target: 443
+        published: 443
     networks:
       - wp-net
     volumes:
       - wp-websitef-vol:/var/www/html
     restart: always
 
-  # nginx:
-  #   build: ./requirements/NGINX
-  #   image: nginx:hakaraou
-  #   env_file:
-  #     - .env
-  #   command: [ "/usr/sbin/nginx", "-g", "daemon off;" ]
-  #   ports:
-  #     - target: 443
-  #       published: 443
-  #   networks:
-  #     - wp-net
-  #   volumes:
-  #     - wp-websitef-vol:/var/www/html
-  #   restart: always
-
-#?
 networks:
   wp-net:
 
