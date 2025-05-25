@@ -1,0 +1,48 @@
+WordPress :
+
+Installe avec wp-cli, configure wp-config.php
+
+Doit utiliser php-fpm, pas nginx // chno lfer9 bin wordpress fiha php or nginx
+
+
+
+
+
+
+
+
+ 4. secrets/
+Stocke les mots de passe dans :
+
+db_root_password.txt
+
+db_password.txt
+
+credentials.txt
+
+Ignore ces fichiers avec .gitignore.
+
+
+
+
+
+
+
+
+
+
+🏁 9. Makefile
+Cible pour : docker-compose up, down, build, etc.
+
+
+
+
+
+
+
+🌐 11. DNS local
+Ajoute login.42.fr → IP locale dans /etc/host
+
+
+
+

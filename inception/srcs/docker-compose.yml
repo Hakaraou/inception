@@ -74,8 +74,20 @@ services:
       - wp-websitef-vol:/var/www/html
     restart: always
 
+#bonus
+  redis:
+    build: ./requirements/bonus/Redis
+    image: redis:hakaraou
+    container_name: redis
+    networks:
+      - wp-net
+    restart: always
+#bonus
+
 networks:
   wp-net:
+    name: wp-net
+    driver: bridge
 
 volumes:
   wp-database-vol:
@@ -83,11 +95,12 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/hakaraou/data/wordpress_db
-
+      device: /Users/hakaraou/Desktop/data/wordpress_db
+#/home/hakaraou/data/wordpress_db
   wp-websitef-vol:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/hakaraou/data/wordpress_wp
+      device: /Users/hakaraou/Desktop/data/wordpress_wp
+#/home/hakaraou/data/wordpress_wp

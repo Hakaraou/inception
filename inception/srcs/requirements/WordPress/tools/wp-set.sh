@@ -43,4 +43,11 @@ wp user create "$WP_USER_NAME" "$WP_USER_EMAIL" \
 	--role="$WP_USER_ROLE" \
 	--allow-root
 
+#bonus
+wp plugin install redis-cache --activate
+wp config set WP_REDIS_HOST $REDIS_HOST --allow-root
+wp config set WP_REDIS_PORT 6379 --raw --allow-root
+wp redis enable --allow-root
+#bonus
+
 exec /usr/sbin/php-fpm7.4 -F

@@ -3,7 +3,8 @@ FROM debian:bullseye
 WORKDIR /var/www
 
 RUN	apt-get update && \
-	apt-get install -y php php-fpm curl php-mysql netcat && \
+	apt-get install -y php php-fpm curl php-mysql netcat \
+	php-redis && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY	./tools/wp-set.sh /usr/wp-set.sh
