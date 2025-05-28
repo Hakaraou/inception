@@ -43,8 +43,8 @@ wp user create "$WP_USER_NAME" "$WP_USER_EMAIL" \
 	--role="$WP_USER_ROLE" \
 	--allow-root
 
-#bonus
-wp plugin install redis-cache --activate
+# bonus
+wp plugin install redis-cache --activate --allow-root
 wp config set WP_REDIS_HOST $REDIS_HOST --allow-root
 wp config set WP_REDIS_PORT 6379 --raw --allow-root
 wp redis enable --allow-root

@@ -9,10 +9,12 @@ secrets:
     file: ../secrets/wp_admin_password.txt
   wp_user_password:
     file: ../secrets/wp_user_password.txt
+  ftp_user_password:
+    file: ../secrets/ftp_user_password.txt
 
 services:
   mariadb:
-    build: ./requirements/mariaDB
+    build: ./requirements/mariadb
     image: mariadb:hakaraou
     container_name: mariadb
     env_file:
@@ -75,6 +77,8 @@ services:
 
 #bonus
   redis:
+    depends_on:
+      - wordpress
     build: ./requirements/bonus/redis
     image: redis:hakaraou
     container_name: redis
@@ -88,16 +92,17 @@ services:
     build: ./requirements/bonus/ftp
     image: ftp:hakaraou
     container_name: ftp
-    #env_file:
-    # - .env
-    #secrets:
-    #ports:
-    # - "21:21"
-    #   ":"
+    env_file:
+    - .env
+    secrets:
+      - ftp_user_password
+    ports:
+      - "21:21"
+      - "30000-30009:30000-30009"
     networks:
       - wp-net
     volumes:
-    - wp-websitef-vol:/home/ftpuser/wordpress
+      - wp-websitef-vol:/var/www/html
     restart: always
 #bonus
 
@@ -113,11 +118,11 @@ volumes:
       type: none
       o: bind
       device: /Users/hakaraou/Desktop/data/wordpress_db
-#/home/hakaraou/data/wordpress_db
+# /home/hakaraou/data/wordpress_db    /home/hakaraou/Desktop/data/wordpress_db  
   wp-websitef-vol:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: /Users/hakaraou/Desktop/data/wordpress_wp
-#/home/hakaraou/data/wordpress_wp
+#/home/hakaraou/data/wordpress_wp       /home/hakaraou/Desktop/data/wordpress_wp
