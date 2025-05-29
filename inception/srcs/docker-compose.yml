@@ -93,7 +93,7 @@ services:
     image: ftp:hakaraou
     container_name: ftp
     env_file:
-    - .env
+      - .env
     secrets:
       - ftp_user_password
     ports:
@@ -103,6 +103,31 @@ services:
       - wp-net
     volumes:
       - wp-websitef-vol:/var/www/html
+    restart: always
+
+  static_website:
+    build: ./requirements/bonus/static_website
+    image: static_website:hakaraou
+    container_name: static_website
+    env_file:
+      - .env
+    ports:
+      - "8080:80"
+    networks:
+      - wp-net
+    restart: always
+
+  adminer:
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    build: ./requirements/bonus/adminer
+    image: adminer:hakaraou
+    container_name: adminer
+    ports:
+      - "9000:99"
+    networks:
+      - wp-net
     restart: always
 #bonus
 
@@ -118,11 +143,11 @@ volumes:
       type: none
       o: bind
       device: /Users/hakaraou/Desktop/data/wordpress_db
-# /home/hakaraou/data/wordpress_db    /home/hakaraou/Desktop/data/wordpress_db  
+# /home/hakaraou/data/wordpress_db      /home/hakaraou/Desktop/data/wordpress_db
   wp-websitef-vol:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: /Users/hakaraou/Desktop/data/wordpress_wp
-#/home/hakaraou/data/wordpress_wp       /home/hakaraou/Desktop/data/wordpress_wp
+#/home/hakaraou/data/wordpress_wp        /home/hakaraou/Desktop/data/wordpress_wp
