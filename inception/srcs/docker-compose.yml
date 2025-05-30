@@ -112,7 +112,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8080:80"
+      - "8000:80"
     networks:
       - wp-net
     restart: always
@@ -125,9 +125,21 @@ services:
     image: adminer:hakaraou
     container_name: adminer
     ports:
-      - "9000:99"
+      - "8080:8080"
     networks:
       - wp-net
+    restart: always
+
+  partainer:
+    build: ./requirements/bonus/partainer
+    image: partainer:hakaraou
+    container_name: partainer
+    ports:
+      - "1221:2112"
+    networks:
+      - wp-net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: always
 #bonus
 
