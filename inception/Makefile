@@ -1,29 +1,45 @@
 COMPOSE = docker-compose -f ./srcs/docker-compose.yml
 
 up:
+	mkdir -p /Users/hakaraou/Desktop/data/wordpress_wp
+	mkdir -p /Users/hakaraou/Desktop/data/wordpress_db
+	chmod -R 755 /Users/hakaraou/Desktop/data/
 	$(COMPOSE) up
 
-upd:
+up-d:
+	mkdir -p /Users/hakaraou/Desktop/data/wordpress_wp
+	mkdir -p /Users/hakaraou/Desktop/data/wordpress_db
+	chmod -R 755 /Users/hakaraou/Desktop/data/
 	$(COMPOSE) up -d
 
 build:
+	mkdir -p /Users/hakaraou/Desktop/data/wordpress_wp
+	mkdir -p /Users/hakaraou/Desktop/data/wordpress_db
+	chmod -R 755 /Users/hakaraou/Desktop/data/
 	$(COMPOSE) build
 
-downv:
+down-v:
 	$(COMPOSE) down -v
 
 down:
 	$(COMPOSE) down
 
-clean: downv
+clean: down-v
 	$(COMPOSE) rm -vf
 
-cleanall: clean
-	docker rmi -f $$(docker images -aq)
+clean-all: clean
+	@if [ -n "$$(docker images -aq)" ]; then \
+		docker rmi -f $$(docker images -aq); \
+	fi
+	@if [ -d "/Users/hakaraou/Desktop/data" ]; then \
+		rm -rf /Users/hakaraou/Desktop/data; \
+	fi
+
+restart: down up
+
+re: clean-all up-d
 
 logs:
 	$(COMPOSE) logs -f
 
-restart: down up
-
-.PHONY: build up down clean logs restart
+.PHONY: build up up-d down down-v clean clean-all logs restart re
