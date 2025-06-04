@@ -154,12 +154,12 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /Users/hakaraou/Desktop/data/wordpress_db
-# /home/hakaraou/data/wordpress_db      /home/hakaraou/Desktop/data/wordpress_db
+      device: /home/hakaraou/data/wordpress_db
+#    /Users/hakaraou/Desktop/data/wordpress_db   /home/hakaraou/Desktop/data/wordpress_db
   wp-websitef-vol:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /Users/hakaraou/Desktop/data/wordpress_wp
-#/home/hakaraou/data/wordpress_wp        /home/hakaraou/Desktop/data/wordpress_wp
+      device: /home/hakaraou/data/wordpress_wp
+#    /Users/hakaraou/Desktop/data/wordpress_wp    /home/hakaraou/Desktop/data/wordpress_wp
