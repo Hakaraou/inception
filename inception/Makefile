@@ -34,4 +34,7 @@ re: clean-all up-d
 logs:
 	$(COMPOSE) logs -f
 
-.PHONY: build up up-d down down-v clean clean-all logs restart re
+ps:
+	$(COMPOSE) ps
+
+.PHONY: build up up-d down down-v clean clean-all logs restart re ps

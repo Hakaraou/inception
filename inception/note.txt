@@ -1,7 +1,0 @@
-docker rm -f $(docker ps -aq)         # remove all containers
-docker rmi -f $(docker images ls -aq)    # remove all images
-docker volume rm $(docker volume ls -q) # remove all volumes
-docker network rm $(docker network ls -q) # remove all networks (except default ones)
-
-docker
-docker --version
