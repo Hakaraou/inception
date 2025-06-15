@@ -48,6 +48,6 @@ wp plugin install redis-cache --activate --allow-root
 wp config set WP_REDIS_HOST $REDIS_HOST --allow-root
 wp config set WP_REDIS_PORT 6379 --raw --allow-root
 wp redis enable --allow-root
-#bonus
+# bonus
 
 exec /usr/sbin/php-fpm7.4 -F

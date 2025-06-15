@@ -49,7 +49,7 @@ services:
     networks:
       - wp-net
     volumes:
-      - wp-websitef-vol:/var/www/html
+      - wp-websitef-vol:/var/www/wordpress
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "9000"]
       interval: 10s
@@ -72,7 +72,7 @@ services:
     networks:
       - wp-net
     volumes:
-      - wp-websitef-vol:/var/www/html
+      - wp-websitef-vol:/var/www/wordpress
     restart: always
 
 #bonus
@@ -102,7 +102,7 @@ services:
     networks:
       - wp-net
     volumes:
-      - wp-websitef-vol:/var/www/html
+      - wp-websitef-vol:/var/www/wordpress
     restart: always
 
   static_website:
