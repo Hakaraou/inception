@@ -10,10 +10,10 @@ RUN openssl req -x509 -nodes -newkey rsa:2048 \
 		-days 365 \
 		-subj "/C=MA/ST=Khouribga/L=City/O=42/OU=42/CN=${DOMAIN_NAME}/UID=${WP_ADMIN_USER}"
 
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
-RUN mkdir -p /var/www/wordpress
+RUN mkdir -p /var/www/html
 
-RUN chown -R www-data:www-data /var/www/wordpress
+RUN chown -R www-data:www-data /var/www/html
 
 CMD [ "/usr/sbin/nginx", "-g", "daemon off;" ]

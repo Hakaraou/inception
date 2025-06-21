@@ -4,7 +4,7 @@ RUN apk add --no-cache nginx
 
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 
-COPY html/ /home/html
+COPY ./index.html /home/html
 
 # RUN mkdir -p /run/nginx
 

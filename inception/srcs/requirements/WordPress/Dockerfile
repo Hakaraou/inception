@@ -7,7 +7,7 @@ RUN	apt-get update && \
 	php-redis && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY	./tools/wp-set.sh /usr/wp-set.sh
+COPY	./wp-set.sh /usr/wp-set.sh
 
 RUN		chmod +x /usr/wp-set.sh
 

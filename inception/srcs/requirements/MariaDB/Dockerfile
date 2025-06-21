@@ -9,7 +9,7 @@ RUN		mkdir -p /var/lib/mysql && \
 		mkdir -p /var/run/mysqld && \
 		chown -R mysql:mysql /var/run/mysqld
 
-COPY	./tools ./tools
+COPY	./db-set.sh ./tools/db-set.sh
 
 RUN		chmod +x ./tools/db-set.sh
 

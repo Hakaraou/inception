@@ -49,7 +49,7 @@ services:
     networks:
       - wp-net
     volumes:
-      - wp-websitef-vol:/var/www/wordpress
+      - wp-websitef-vol:/var/www/html
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "9000"]
       interval: 10s
@@ -72,7 +72,7 @@ services:
     networks:
       - wp-net
     volumes:
-      - wp-websitef-vol:/var/www/wordpress
+      - wp-websitef-vol:/var/www/html
     restart: always
 
 #bonus
@@ -102,7 +102,7 @@ services:
     networks:
       - wp-net
     volumes:
-      - wp-websitef-vol:/var/www/wordpress
+      - wp-websitef-vol:/var/www/html
     restart: always
 
   static_website:
@@ -130,10 +130,10 @@ services:
       - wp-net
     restart: always
 
-  partainer:
-    build: ./requirements/bonus/partainer
-    image: partainer:hakaraou
-    container_name: partainer
+  portainer:
+    build: ./requirements/bonus/portainer
+    image: portainer:hakaraou
+    container_name: portainer
     ports:
       - "1221:2112"
     networks:
