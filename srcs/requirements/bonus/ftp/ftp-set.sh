@@ -9,6 +9,7 @@ usermod -d /var/www/html ${FTP_USER}
 chown -R ${FTP_USER}:${FTP_USER} /var/www/html
 echo "${FTP_USER}:${FTP_USER_PASSWORD}" | chpasswd
 echo ${FTP_USER} >> /etc/vsftpd.user_list
+usermod -s /bin/bash ${FTP_USER}
 
 cat > /etc/vsftpd.conf << EOF
 listen=YES

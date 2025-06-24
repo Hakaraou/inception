@@ -6,6 +6,4 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 
 COPY ./index.html /home/html
 
-# RUN mkdir -p /run/nginx
-
 CMD [ "/usr/sbin/nginx", "-g", "daemon off;" ]
